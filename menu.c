@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include "treemap.h"
 
 
 
 
 void initMenu(){
 
+  TreeMap *mapaPalabras=createTreemap(); //clave: string, valor:estruct Palabra
 
     int eleccion;
 
@@ -25,7 +27,9 @@ void initMenu(){
 
         switch (eleccion){
         case 1:
-            break;
+        
+        cargarDocumentos(mapaPalabras);
+        break;
 
         case 2:
             break;
