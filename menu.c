@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include "treemap.h"
+#include "funciones.h"
 
 
 
 
 void initMenu(){
-
-  TreeMap *mapaPalabras=createTreemap(); //clave: string, valor:estruct Palabra
 
     int eleccion;
 
@@ -19,8 +18,8 @@ void initMenu(){
         printf("3-. Buscar libro por titulo\n");
         printf("4-. Palabras con mayor fecuencia\n");
         printf("5-. Palabras mas relevants\n");
-        printf("6-. Buscar por palabra");
-        printf("7-. Mostrar palabra en un contexto");
+        printf("6-. Buscar por palabra\n");
+        printf("7-. Mostrar palabra en un contexto\n");
 
         scanf("%d",&eleccion);
         
@@ -28,7 +27,7 @@ void initMenu(){
         switch (eleccion){
         case 1:
         
-        cargarDocumentos(mapaPalabras);
+        cargarDocumentos();
         break;
 
         case 2:

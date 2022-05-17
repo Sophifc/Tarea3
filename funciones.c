@@ -1,19 +1,21 @@
 #include <stdio.h>
 #include <string.h>
+#include "funciones.h"
 #include "treemap.h"
 
 
 typedef struct{
     char* Palabra;
     int contador;
-}Palabra;
+}EstructPalabra;
 
-void cargarDocumentos(TreeMap *mapaPalabras){
+void cargarDocumentos(){
 
     char identificadores[150];
     char separador[2]=" ";
 
     printf("Ingrese el identificador de los libros a indexar separados por espacios\n");
+    fgets(identificadores,150,stdin);
     fgets(identificadores,150,stdin);
 
     char *auxArchivo=strtok(identificadores, separador);
@@ -32,7 +34,11 @@ void cargarDocumentos(TreeMap *mapaPalabras){
                 printf("El archivo no se encontro o no existe\n");
                 continue;
             }
-            
+            else{
+                printf("archivo encontrado\n");
+            }
+
+
 
 
         }
