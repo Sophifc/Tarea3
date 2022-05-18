@@ -1,3 +1,3 @@
 
 
-void cargarDocumentos();
+void cargarDocumentos(TreeMap *mapaPalabras, TreeMap *mapaLibros);

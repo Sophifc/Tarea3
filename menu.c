@@ -3,9 +3,18 @@
 #include "funciones.h"
 
 
+int lower_than_string(void* key1, void* key2){
+    char* k1=(char*) key1;
+    char* k2=(char*) key2;
+    if(strcmp(k1,k2)<0) return 1;
+    return 0;
+}
 
 
 void initMenu(){
+
+  TreeMap *mapaPalabras=createTreeMap(lower_than_string);
+  TreeMap *mapaLibros=createTreeMap(lower_than_string);
 
     int eleccion;
 
@@ -27,7 +36,7 @@ void initMenu(){
         switch (eleccion){
         case 1:
         
-        cargarDocumentos();
+        cargarDocumentos(mapaPalabras, mapaLibros);
         break;
 
         case 2:
