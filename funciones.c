@@ -50,14 +50,12 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros){
             }
             else{
                 printf("archivo encontrado\n");
-
+                char aux[100];
                 //sacar el nombre del libro desde el archivo
-                fseek(archivoAbierto,32,SEEK_SET);//se mueve el puntero a la posicion 32 del archivo de texto
-                //printf("%ld\n", pos);
+                fseek(archivoAbierto,33,SEEK_SET);//se mueve el puntero a la posicion 32 del archivo de texto
                 
-                
-                //titulo=fgets(fseek(archivoAbierto,31,SEEK_SET),100,archivoAbierto);
-                //printf("titulo: %s\n",titulo);
+                fgets(aux,100,archivoAbierto);
+                printf("TITULO: %s\n", aux);
 
                 //copiar nombre 
                 
