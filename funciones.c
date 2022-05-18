@@ -18,7 +18,7 @@ typedef struct{
 }Libro;
 
 
-void cargarDocumentos(TreeMap *mapaPalabras, TreeMap *mapaLibros){
+void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros){
 
     char identificadores[150];
     char separador[2]=" ";
@@ -52,6 +52,15 @@ void cargarDocumentos(TreeMap *mapaPalabras, TreeMap *mapaLibros){
                 printf("archivo encontrado\n");
 
                 //sacar el nombre del libro desde el archivo
+                fseek(archivoAbierto,32,SEEK_SET);//se mueve el puntero a la posicion 32 del archivo de texto
+                //printf("%ld\n", pos);
+                
+                
+                //titulo=fgets(fseek(archivoAbierto,31,SEEK_SET),100,archivoAbierto);
+                //printf("titulo: %s\n",titulo);
+
+                //copiar nombre 
+                
                 //guardar el nombre en una variable 
                 //ver si el libro ya existe previamente en el mapa
                 //si no existe agregarlo ->luego de agregarlo se comienzan a contar las palabras
