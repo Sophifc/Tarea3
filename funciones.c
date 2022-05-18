@@ -12,7 +12,7 @@ typedef struct{
 
 typedef struct{
     char nombre[100];
-    char id[7];
+    int id;//con atoi pasar el string a int
     int cantPalabras;
     //List ListaPalabras
 }Libro;
