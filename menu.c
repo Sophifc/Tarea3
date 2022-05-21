@@ -35,13 +35,14 @@ void initMenu(){
         
 
         switch (eleccion){
+
         case 1:
-        
         cargarDocumentos(mapaPalabras, mapaLibros);
         break;
 
         case 2:
-            break;
+        mostrarDocumentos(mapaLibros);
+        break;
 
 
         case 3:
