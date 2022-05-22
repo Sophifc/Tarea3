@@ -8,4 +8,4 @@ void cargarDocumentos(TreeMap *mapaPalabras, TreeMap *mapaLibros/*, FILE *carpet
 void contarPalabras(TreeMap* mapaPalabras,char *auxArchivo,Libro* auxLibro);
 void mostrarDocumentos(TreeMap* mapaLibros);
 void buscarLibroTitulo(TreeMap* mapaLibros);
-void mayorFrecuencia(TreeMep* mapaLibros);
+void mayorFrecuencia(TreeMap* mapaLibros);

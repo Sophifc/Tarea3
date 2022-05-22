@@ -16,8 +16,9 @@ typedef struct{
 struct Libro{
     char nombre[100];
     char id[100];
-    List *ListaPalabras;//almacena nodo de estrcut Palabra,(palabras que tiene el libro)
-    int cantidad;
+    List *ListaPalabras;//almacena nodo de estrcut Palabra,palabras que tiene el libro
+    List *CantidadVecesPalabra;//almacena la palabra y cantidad de veces que aparece en el libro
+    int cantidad;//cantidad de palabras que tiene en total
 };
 
 
@@ -27,6 +28,11 @@ void* crearLibro(char* auxTitulo, char* auxArchivo){
     Libro* auxLibro=(Libro*) malloc (sizeof(Libro));
     List* listaLibro=createList();
     auxLibro->ListaPalabras=listaLibro;
+
+
+    List* listaLibro2=createList();
+    auxLibro->CantidadVecesPalabra=listaLibro2;
+
     strcpy(auxLibro->nombre,auxTitulo);
     strcpy(auxLibro->id,auxArchivo);
     auxLibro->cantidad=0;
@@ -51,8 +57,6 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros/*,FILE *carpeta
 
         while(auxArchivo!=NULL){
 
-            printf("Nombre del archivo/Indetificador del libro: %s\n", auxArchivo);
-
             FILE *archivoAbierto=fopen(auxArchivo,"r");
 
             if(archivoAbierto==NULL){
@@ -62,6 +66,7 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros/*,FILE *carpeta
                 break;
             }
             else{
+                printf("Nombre del archivo/Indetificador del libro: %s\n", auxArchivo);
                 printf("archivo encontrado\n");
                 char auxTitulo[100];
                 //sacar el nombre del libro desde el archivo
@@ -72,25 +77,14 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros/*,FILE *carpeta
 
                 }
 
-                if(searchTreeMap(mapaLibros,auxTitulo)==NULL){//el libro no existe en el mapa
+                if(searchTreeMap(mapaLibros,auxArchivo)==NULL){//el libro no existe en el mapa
                    
                     Libro *auxLibro=crearLibro(auxTitulo,auxArchivo);
 
-                    insertTreeMap(mapaLibros,auxLibro->nombre,auxLibro);//se agrega el libro al mapa, key=titulo, valor=Libro
+                    insertTreeMap(mapaLibros,auxArchivo,auxLibro);//se agrega el libro al mapa, key=id, valor=Libro
                     contarPalabras(mapaPalabras,auxArchivo,auxLibro);//funcion para contar las palabras del libro
-
-                    /*printf("mostrando cantidad d epalabras %d\n", auxLibro->cantidad);
-
-                    Palabra *AxuP=firstList(auxLibro->ListaPalabras);
-                    while(AxuP!=NULL){
-                        printf("palabras del libro\n");
-                        printf("%s\n", AxuP->palabra);
-                        AxuP=nextList(auxLibro->ListaPalabras);
-                    }*/
+                    
                 }
-                /*else{
-                    continue;
-                }*/
 
             }
 
@@ -128,6 +122,15 @@ void* crearPalabra(char *auxPalabra){
 
 }
 
+void* crearPalabra2(char *auxPalabra){
+
+    Palabra* auxP=(Palabra*) malloc (sizeof(Palabra));
+    strcpy(auxP->palabra,auxPalabra);
+    auxP->contador=1;
+    return auxP;
+
+}
+
 
 // FUNCION QUE CUENTA LAS PALABRAS DEL LIBRO
 void contarPalabras(TreeMap *mapaPalabras,char *auxArchivo,Libro* auxLibro){
@@ -147,14 +150,28 @@ void contarPalabras(TreeMap *mapaPalabras,char *auxArchivo,Libro* auxLibro){
             insertTreeMap(mapaPalabras,auxPalabra,palabraCreada);
             //se inserta la palabra en la lista del libro
             pushBack(auxLibro->ListaPalabras,palabraCreada);
+
+            Palabra *palabraCreada2=crearPalabra2(auxPalabra);
+            pushBack(auxLibro->CantidadVecesPalabra,palabraCreada2);
+
             auxLibro->cantidad++;
         }
         else{//la palabras existe
 
-            Palabra *auxPalabra2;
             //aumentar contador
+            Palabra *auxPalabra2;
             auxPalabra2=auxPair->value;
             auxPalabra2->contador++;
+
+            //aumentar cantidad en la lista del libro 
+            Palabra* auxPalabra3=firstList(auxLibro->CantidadVecesPalabra);
+            while(auxPalabra3!=NULL){
+                if(strcmp(auxPalabra3->palabra,auxPalabra2->palabra)==0){
+                    auxPalabra3->contador++;
+                }
+                auxPalabra3=nextList(auxLibro->CantidadVecesPalabra);
+            }
+
             
         }
         auxPalabra=next_palabra(archivoAbierto);
@@ -215,7 +232,7 @@ void buscarLibroTitulo(TreeMap* mapaLibros){
 
                 while (auxLista!=NULL){
 
-                    if(strcmp(auxLista->palabra,auxPalabras)!=0){
+                    if(strcmp(auxLista->palabra,auxPalabras)==0){
                         encontradas++;
                     }
 
@@ -250,11 +267,56 @@ void buscarLibroTitulo(TreeMap* mapaLibros){
 
 
 // 4) FUNCION QUE BUSCA Y MUESTRA LAS PALABRAS CON MAYOR FRECUENCIA DE UN LIBRO INGRRESADO POR LE USUARIO
-void mayorFrecuencia(TreeMep* mapaLibros){
+
+void mayorFrecuencia(TreeMap* mapaLibros){
 
     char identificador[150];
-    printf("Ingrese el identificador del libro\n")
-    scanf("%s", indetificador);
-    
+    printf("Ingrese el identificador del libro\n");
+    fgets(identificador,150,stdin);
+    fgets(identificador,150,stdin);
+
+    Pair* auxPair=searchTreeMap(mapaLibros,identificador);
+
+    if(auxPair!=NULL){
+        Libro* auxLibro=auxPair->value;
+
+        double frecuencia;
+        double frecuenciaInicial=0;
+        List* auxLista=createList();
+        Palabra* auxPalabra=firstList(auxLibro->CantidadVecesPalabra);
+
+        while(auxPalabra!=NULL){
+        
+            frecuencia=(auxPalabra->contador/auxLibro->cantidad);
+            printf("frecuencia: %lf\n", frecuencia);
+
+            if(frecuencia>frecuenciaInicial){
+               pushBack(auxLista,auxPalabra);
+               frecuenciaInicial=frecuencia;
+               frecuencia=0;
+            }
+            auxPalabra=nextList(auxLibro->CantidadVecesPalabra);
+        }
+
+        printf("Palabras con mayor frecuencia:\n");
+        auxPalabra=firstList(auxLista);
+        int cont=0;
+        while(auxPalabra!=NULL){
+
+           if(cont==10){
+               break;
+            }
+            else{
+                printf("%d-. %s", cont, auxPalabra->palabra);
+                cont++;
+                auxPalabra=nextList(auxLista);
+           }
+
+        }
+    }
+    else{
+        printf("El libro perteneciente al id no se ha encontrado\n");
+
+    }
 
 }
