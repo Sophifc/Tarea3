@@ -17,6 +17,7 @@ struct Libro{
     char nombre[100];
     char id[100];
     List *ListaPalabras;//almacena nodo de estrcut Palabra,(palabras que tiene el libro)
+    int cantidad;
 };
 
 
@@ -28,10 +29,13 @@ void* crearLibro(char* auxTitulo, char* auxArchivo){
     auxLibro->ListaPalabras=listaLibro;
     strcpy(auxLibro->nombre,auxTitulo);
     strcpy(auxLibro->id,auxArchivo);
+    auxLibro->cantidad=0;
     return auxLibro;
 }
 
-void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros){
+
+// 1) FUNCION QUE CARGA LOS LIBROS INGRESADOS POR EL USUARIO
+void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros/*,FILE *carpeta*/){
 
     char identificadores[150];
     char separador[2]=" ";
@@ -40,8 +44,8 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros){
     fgets(identificadores,150,stdin);
     fgets(identificadores,150,stdin);
 
+    
     char *auxArchivo=strtok(identificadores, separador);
-
 
     if(auxArchivo!=NULL){
 
@@ -70,11 +74,19 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros){
 
                 if(searchTreeMap(mapaLibros,auxTitulo)==NULL){//el libro no existe en el mapa
                    
-                    printf("El libro no existe,hay que crearlo\n");
                     Libro *auxLibro=crearLibro(auxTitulo,auxArchivo);
 
                     insertTreeMap(mapaLibros,auxLibro->nombre,auxLibro);//se agrega el libro al mapa, key=titulo, valor=Libro
                     contarPalabras(mapaPalabras,auxArchivo,auxLibro);//funcion para contar las palabras del libro
+
+                    /*printf("mostrando cantidad d epalabras %d\n", auxLibro->cantidad);
+
+                    Palabra *AxuP=firstList(auxLibro->ListaPalabras);
+                    while(AxuP!=NULL){
+                        printf("palabras del libro\n");
+                        printf("%s\n", AxuP->palabra);
+                        AxuP=nextList(auxLibro->ListaPalabras);
+                    }*/
                 }
                 /*else{
                     continue;
@@ -116,6 +128,8 @@ void* crearPalabra(char *auxPalabra){
 
 }
 
+
+// FUNCION QUE CUENTA LAS PALABRAS DEL LIBRO
 void contarPalabras(TreeMap *mapaPalabras,char *auxArchivo,Libro* auxLibro){
 
     //abrir archivo
@@ -133,6 +147,7 @@ void contarPalabras(TreeMap *mapaPalabras,char *auxArchivo,Libro* auxLibro){
             insertTreeMap(mapaPalabras,auxPalabra,palabraCreada);
             //se inserta la palabra en la lista del libro
             pushBack(auxLibro->ListaPalabras,palabraCreada);
+            auxLibro->cantidad++;
         }
         else{//la palabras existe
 
@@ -147,6 +162,8 @@ void contarPalabras(TreeMap *mapaPalabras,char *auxArchivo,Libro* auxLibro){
 
 }
 
+
+// 2) FUNCION MUESTRA TODOS LOS LIBROS CARGADOS ORDENADOS POR ORDEN ALFABETICO
 void mostrarDocumentos(TreeMap* mapaLibros){
 
     Pair* aux=firstTreeMap(mapaLibros);
@@ -165,11 +182,9 @@ void mostrarDocumentos(TreeMap* mapaLibros){
     }
 }
 
-
+// 3)FUNCION QUE BUSCA  Y MJESTRA LOS LIBROS QUE CONTENGAN TODAS LAS PALABRAS INGRESADAS POR EL USUARIO
 void buscarLibroTitulo(TreeMap* mapaLibros){
-    //USUARIO INGRESA PALABRAS SEPARADAS POR ESPACIOS
-    //BUSCAR LIBROS QUE CONTIENEN TODAS LAS PALABRAS
-    //MOSTRAR TITULOS
+
     char palabras[150];
     char separador[2]=" ";
     int cantidad;
@@ -189,6 +204,7 @@ void buscarLibroTitulo(TreeMap* mapaLibros){
     while(auxPair!=NULL){
 
         char *auxPalabras=strtok(palabras, separador);
+        printf("palabra a buscar : %s\n", auxPalabras);
 
         if(auxPalabras!=NULL){
 
@@ -225,9 +241,20 @@ void buscarLibroTitulo(TreeMap* mapaLibros){
 
     printf("Libros con todas las palabras\n");
     while(auxLibro!=NULL){
-        printf("%s\n",auxLibro->nombre);
 
+        printf("%s\n",auxLibro->nombre);
         auxLibro=nextList(librosConPalabras);
     }
+
+}
+
+
+// 4) FUNCION QUE BUSCA Y MUESTRA LAS PALABRAS CON MAYOR FRECUENCIA DE UN LIBRO INGRRESADO POR LE USUARIO
+void mayorFrecuencia(TreeMep* mapaLibros){
+
+    char identificador[150];
+    printf("Ingrese el identificador del libro\n")
+    scanf("%s", indetificador);
+    
 
 }

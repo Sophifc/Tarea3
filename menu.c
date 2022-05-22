@@ -37,7 +37,8 @@ void initMenu(){
         switch (eleccion){
 
         case 1:
-        cargarDocumentos(mapaPalabras, mapaLibros);
+        //FILE *carpeta=fopen("libros","r");
+        cargarDocumentos(mapaPalabras, mapaLibros/*, carpeta*/);
         break;
 
         case 2:
@@ -50,8 +51,8 @@ void initMenu(){
         break;
 
         case 4:
-
-           break;
+        mayorFrecuencia(mapaLibros);
+        break;
 
         case 5:
 
