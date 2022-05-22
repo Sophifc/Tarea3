@@ -46,8 +46,8 @@ void initMenu(){
 
 
         case 3:
-
-          break;
+        buscarLibroTitulo(mapaLibros);
+        break;
 
         case 4:
 

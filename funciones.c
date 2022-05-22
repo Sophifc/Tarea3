@@ -15,8 +15,7 @@ typedef struct{
 
 struct Libro{
     char nombre[100];
-    char id[100];//con atoi pasar el string a int
-    //int cantPalabras;
+    char id[100];
     List *ListaPalabras;//almacena nodo de estrcut Palabra,(palabras que tiene el libro)
 };
 
@@ -24,7 +23,6 @@ struct Libro{
 
 void* crearLibro(char* auxTitulo, char* auxArchivo){
 
-    //printf("Creando libro\n");
     Libro* auxLibro=(Libro*) malloc (sizeof(Libro));
     List* listaLibro=createList();
     auxLibro->ListaPalabras=listaLibro;
@@ -47,10 +45,7 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros){
 
     if(auxArchivo!=NULL){
 
-
-
         while(auxArchivo!=NULL){
-
 
             printf("Nombre del archivo/Indetificador del libro: %s\n", auxArchivo);
 
@@ -58,8 +53,8 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros){
 
             if(archivoAbierto==NULL){
 
-                auxArchivo=strtok(identificadores,separador);
                 printf("El archivo no se encontro o no existe\n");
+                auxArchivo=strtok(identificadores,separador);
                 break;
             }
             else{
@@ -77,25 +72,18 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros){
                    
                     printf("El libro no existe,hay que crearlo\n");
                     Libro *auxLibro=crearLibro(auxTitulo,auxArchivo);
-                    //printf("Libro creado\n");
 
-                    insertTreeMap(mapaLibros,auxTitulo,auxLibro);//se agrega el libro al mapa, key=titulo, valor=Libro
-                    //printf("Libro guardado en el mapa\n");
+                    insertTreeMap(mapaLibros,auxLibro->nombre,auxLibro);//se agrega el libro al mapa, key=titulo, valor=Libro
                     contarPalabras(mapaPalabras,auxArchivo,auxLibro);//funcion para contar las palabras del libro
                 }
-                else{
+                /*else{
                     continue;
-                }
-                
-                //si no existe agregarlo ->luego de agregarlo se comienzan a contar las palabras
-                //si existe pasar al siguiente archivo
+                }*/
 
             }
 
             fclose(archivoAbierto);
             auxArchivo=strtok(NULL, separador);
-
-            printf("siguiente archivo\n");
 
         }
     }
@@ -120,7 +108,7 @@ char* next_palabra(FILE *archivo){
 
 
 void* crearPalabra(char *auxPalabra){
-    //printf("creando palabra\n");
+
     Palabra* auxP=(Palabra*) malloc (sizeof(Palabra));
     strcpy(auxP->palabra,auxPalabra);
     auxP->contador=1;
@@ -129,7 +117,7 @@ void* crearPalabra(char *auxPalabra){
 }
 
 void contarPalabras(TreeMap *mapaPalabras,char *auxArchivo,Libro* auxLibro){
-    //printf("Contando palabras del libro\n");
+
     //abrir archivo
     FILE *archivoAbierto=fopen(auxArchivo,"r");
     //ingresa a cada palabra
@@ -137,34 +125,23 @@ void contarPalabras(TreeMap *mapaPalabras,char *auxArchivo,Libro* auxLibro){
     while(auxPalabra){
 
         Pair *auxPair=searchTreeMap(mapaPalabras,auxPalabra);
-        
 
         if(auxPair==NULL){//la palabra no existe
-            
-           // printf("Palabra no existe,a crearla\n");
 
             Palabra *palabraCreada=crearPalabra(auxPalabra);
             //se inserta la palabras en el mapa
-            
             insertTreeMap(mapaPalabras,auxPalabra,palabraCreada);
-            //printf("palabra guardado en el mapa\n");
             //se inserta la palabra en la lista del libro
-            //ERROR
             pushBack(auxLibro->ListaPalabras,palabraCreada);
-            //printf("palabra guardado en la lista del libro\n");
-
-            //crear el nodo para la palabra y agregarlo al mapa y la lista
         }
         else{//la palabras existe
 
             Palabra *auxPalabra2;
-            //printf("palabra existe, aumentando contador\n");
             //aumentar contador
             auxPalabra2=auxPair->value;
             auxPalabra2->contador++;
             
         }
-        //printf("pasando a la sgte palabra\n");
         auxPalabra=next_palabra(archivoAbierto);
     }
 
@@ -175,11 +152,82 @@ void mostrarDocumentos(TreeMap* mapaLibros){
     Pair* aux=firstTreeMap(mapaLibros);
     Libro* auxLibro;
 
-    while(aux!=NULL){
-
-        auxLibro=aux->value;
-        printf("Titulo:%s  - Identificador:%s \n", auxLibro->nombre, auxLibro->id);
-
-        aux=nextTreeMap(mapaLibros);
+    if(aux==NULL){
+        printf("Aun no hay libros\n");
     }
+    else{
+       while(aux!=NULL){
+
+           auxLibro=aux->value;
+           printf("Titulo:%s  - Identificador:%s \n", auxLibro->nombre, auxLibro->id);
+           aux=nextTreeMap(mapaLibros);
+        }
+    }
+}
+
+
+void buscarLibroTitulo(TreeMap* mapaLibros){
+    //USUARIO INGRESA PALABRAS SEPARADAS POR ESPACIOS
+    //BUSCAR LIBROS QUE CONTIENEN TODAS LAS PALABRAS
+    //MOSTRAR TITULOS
+    char palabras[150];
+    char separador[2]=" ";
+    int cantidad;
+    int encontradas=0;
+    List* librosConPalabras=createList();
+
+    printf("ingrese la cantidad de palabras que utilizara\n");
+    scanf("%d", &cantidad);
+    printf("Ingrese las palabras para buscar el libro separada por un espacio\n");
+    fgets(palabras,150,stdin);
+    fgets(palabras,150,stdin);
+
+    Pair* auxPair=firstTreeMap(mapaLibros);
+    Libro* auxLibro;
+    Palabra* auxLista;
+    
+    while(auxPair!=NULL){
+
+        char *auxPalabras=strtok(palabras, separador);
+
+        if(auxPalabras!=NULL){
+
+            while (auxPalabras!=NULL){
+
+                auxLibro=auxPair->value;
+                auxLista=firstList(auxLibro->ListaPalabras);
+
+                while (auxLista!=NULL){
+
+                    if(strcmp(auxLista->palabra,auxPalabras)!=0){
+                        encontradas++;
+                    }
+
+                    auxLista=nextList(auxLibro->ListaPalabras);
+                    
+                }
+                auxPalabras=strtok(NULL, separador);
+                
+            }
+            
+        }
+
+        if(encontradas==cantidad){
+
+            //se agrega el libro a la lista con los libros que tienen todas las palabras
+            pushBack(librosConPalabras,auxLibro);
+        }
+        encontradas=0;
+        auxPair=nextTreeMap(mapaLibros);
+    }
+    
+    auxLibro=firstList(librosConPalabras);
+
+    printf("Libros con todas las palabras\n");
+    while(auxLibro!=NULL){
+        printf("%s\n",auxLibro->nombre);
+
+        auxLibro=nextList(librosConPalabras);
+    }
+
 }
