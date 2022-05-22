@@ -37,8 +37,7 @@ void initMenu(){
         switch (eleccion){
 
         case 1:
-        //FILE *carpeta=fopen("libros","r");
-        cargarDocumentos(mapaPalabras, mapaLibros/*, carpeta*/);
+        cargarDocumentos(mapaPalabras, mapaLibros);
         break;
 
         case 2:
