@@ -72,7 +72,10 @@ void cargarDocumentos(TreeMap* mapaPalabras, TreeMap* mapaLibros/*,FILE *carpeta
                 //sacar el nombre del libro desde el archivo
                 fseek(archivoAbierto,33,SEEK_SET);//se mueve el puntero a la posicion 32 del archivo de texto
                 
-                if(strcmp(fgets(auxTitulo,100,archivoAbierto), ",")!=0){
+                fgets(auxTitulo,100,archivoAbierto);
+                //strtok(auxTitulo, ",");
+
+                if(strcmp(auxTitulo, ",")!=0){
                     printf("TITULO: %s\n", auxTitulo);
 
                 }
@@ -274,6 +277,7 @@ void mayorFrecuencia(TreeMap* mapaLibros){
     printf("Ingrese el identificador del libro\n");
     fgets(identificador,150,stdin);
     fgets(identificador,150,stdin);
+    strtok(identificador," ");
 
     Pair* auxPair=searchTreeMap(mapaLibros,identificador);
 
