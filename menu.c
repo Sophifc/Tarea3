@@ -58,8 +58,8 @@ void initMenu(){
           break;
 
         case 6:
-
-           break;
+        buscarPorPalabras(mapaLibros);
+        break;
 
         case 7:
 

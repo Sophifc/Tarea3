@@ -324,3 +324,42 @@ void mayorFrecuencia(TreeMap* mapaLibros){
     }
 
 }
+
+
+void buscarPorPalabras(TreeMap* mapaLibros){
+
+    printf("Ingrese la palabra para buscar los libros que la contienen\n");
+    char palabras[100];
+    fgets(palabras,100,stdin);
+    fgets(palabras,100,stdin);
+    strtok(palabras,"\n");
+    int encontrada;
+
+    Pair* auxPair=firstTreeMap(mapaLibros);
+
+    while(auxPair!=NULL){
+
+        encontrada=0;
+        Libro* auxLibro=auxPair->value;
+        Palabra* auxPalabra=firstList(auxLibro->ListaPalabras);
+
+        if(auxPalabra==NULL){
+            printf("El libro no tiene ninguna palabra guardada\n");
+        }
+        else{
+            while (encontrada==0){
+
+                if(strcmp(auxPalabra->palabra,palabras)==0){
+                    printf("El libro %s con id %s contiene la palabra\n", auxLibro->nombre, auxLibro->id);
+                    encontrada=1;
+                }
+                auxPalabra=nextList(auxLibro->ListaPalabras);
+            }
+        }
+
+        auxPair=nextTreeMap(mapaLibros);
+        
+
+    }
+
+}
